@@ -5,12 +5,14 @@ using DevFreela.Application.Commands.UpdateProject;
 using DevFreela.Application.Queries.GetAllProjects;
 using DevFreela.Application.Services.Interfaces;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevFreela.API.Controllers
 {
 
     [Route("api/projects")]
+    [Authorize(Roles = "client, freelancer")]
     public class ProjectsController : Controller
     {
         private readonly IProjectService _projectService;
@@ -22,6 +24,7 @@ namespace DevFreela.API.Controllers
             _mediator = mediator;
         }
         [HttpGet]
+        [Authorize(Roles = "client, freelancer")]
         public async Task<IActionResult> Get(string query)
         {
             var getAllProjectsQuery = new GetAllProjectsQuery(query);

@@ -4,6 +4,8 @@ using DevFreela.Application.Services.Implementations;
 using DevFreela.Application.Services.Interfaces;
 using DevFreela.Application.Validators;
 using DevFreela.Core.Repositories;
+using DevFreela.Core.Services;
+using DevFreela.Infrastructure.AuthService;
 using DevFreela.Infrastructure.Persistence;
 using DevFreela.Infrastructure.Repositories;
 using FluentValidation.AspNetCore;
@@ -27,7 +29,11 @@ builder.Services.AddDbContext<DevFreelaDbContext>(options =>
 options.UseSqlServer(connectionString));
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ISkillRepository, SkillRepository>();
 builder.Services.AddMediatR(cfg => { cfg.RegisterServicesFromAssemblies(typeof(CreateProjectCommand).Assembly); });
+
 
 var app = builder.Build();
 
@@ -41,6 +47,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllers();
 
